@@ -5,6 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ShopX - Your Online Store</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Upload Sidebar Styles */
+    .upload-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 300px;
+      height: 100%;
+      background: #f4f4f4;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+      padding: 20px;
+      transition: right 0.3s ease;
+      z-index: 9999;
+    }
+    .upload-sidebar.open {
+      right: 0;
+    }
+    .upload-sidebar h2 {
+      margin-top: 0;
+    }
+    .upload-sidebar input[type="file"] {
+      margin-top: 15px;
+    }
+    .upload-sidebar button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
@@ -18,10 +48,21 @@
         <a href="#">Deals</a>
         <a href="#" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</a>
         <a href="#">Login</a>
+        <a href="#" onclick="toggleUpload()">Upload Image</a>
         <button onclick="toggleTheme()" class="theme-btn">Mode</button>
       </nav>
     </div>
   </header>
+
+  <!-- Upload Image Sidebar -->
+  <aside class="upload-sidebar" id="uploadSidebar">
+    <h2>Upload Your Photo</h2>
+    <form id="uploadForm" onsubmit="handleUpload(event)">
+      <input type="file" id="userImage" name="image" accept="image/*" required />
+      <button type="submit">Proceed</button>
+    </form>
+    <button onclick="toggleUpload()">Close</button>
+  </aside>
 
   <!-- Cart Side Panel -->
   <aside class="cart-panel" id="cartPanel">
@@ -96,6 +137,8 @@
     </div>
   </main>
 
+
+
   <!-- Footer -->
   <footer>
     <p>&copy; 2025 ShopX. All rights reserved.</p>
@@ -104,6 +147,28 @@
   <!-- JavaScript -->
   <script>
     let cart = [];
+
+    function toggleCart() {
+      document.getElementById('cartPanel').classList.toggle('open');
+    }
+
+    function toggleUpload() {
+      document.getElementById('uploadSidebar').classList.toggle('open');
+    }
+
+    function handleUpload(event) {
+      event.preventDefault();
+      const fileInput = document.getElementById('userImage');
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        localStorage.setItem('uploadedImage', e.target.result);
+        window.location.href = 'select.html';
+      };
+      reader.readAsDataURL(file);
+    }
 
     function addToCart(name, price, img) {
       const existing = cart.find(item => item.name === name);
@@ -161,11 +226,6 @@
     function removeFromCart(index) {
       cart.splice(index, 1);
       updateCartUI();
-    }
-
-    function toggleCart() {
-      const panel = document.getElementById('cartPanel');
-      panel.classList.toggle('open');
     }
 
     function toggleTheme() {

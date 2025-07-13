@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clothing Selection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    .left-panel {
+      flex: 2;
+      padding: 20px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 20px;
+      border-left: 1px solid #ccc;
+      background-color: #fff;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .product-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      width: 180px;
+      display: inline-block;
+      vertical-align: top;
+      text-align: center;
+      background: #fff;
+      cursor: pointer;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .product-card img {
+      width: 150px;
+      height: 200px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .product-card.selected {
+      border: 2px solid #007bff;
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+    }
+
+    #previewImage {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 5px 10px;
+      margin-top: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #submitBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="left-panel">
+    <h2>Select Clothing</h2>
+
+    <div class="section" id="shirtSection">
+      <h3>Shirts</h3>
+      <div class="product-card" onclick="selectItem('shirt', 'Shirt 1', this)">
+        <img src="images/shirt1.png" alt="Shirt 1">
+        <h4>Shirt 1</h4>
+      </div>
+      <div class="product-card" onclick="selectItem('shirt', 'Shirt 2', this)">
+        <img src="images/shirt2.png" alt="Shirt 2">
+        <h4>Shirt 2</h4>
+      </div>
+    </div>
+
+    <div class="section" id="pantSection">
+      <h3>Pants</h3>
+      <div class="product-card" onclick="selectItem('pant', 'Pant 1', this)">
+        <img src="images/pant1.png" alt="Pant 1">
+        <h4>Pant 1</h4>
+      </div>
+      <div class="product-card" onclick="selectItem('pant', 'Pant 2', this)">
+        <img src="images/pant2.png" alt="Pant 2">
+        <h4>Pant 2</h4>
+      </div>
+    </div>
+
+    <div class="section" id="jacketSection">
+      <h3>Jackets</h3>
+      <div class="product-card" onclick="selectItem('jacket', 'Jacket 1', this)">
+        <img src="images/product4.jpg" alt="Jacket 1">
+        <h4>Jacket 1</h4>
+      </div>
+      <div class="product-card" onclick="selectItem('jacket', 'Jacket 2', this)">
+        <img src="images/jacket1.png" alt="Jacket 2">
+        <h4>Jacket 2</h4>
+      </div>
+      <div class="product-card" onclick="selectItem('jacket', 'Jacket 3', this)">
+        <img src="images/jacket2.png" alt="Jacket 3">
+        <h4>Jacket 3</h4>
+      </div>
+    </div>
+
+    <button id="submitBtn" onclick="submitSelection()">Submit Selection</button>
+  </div>
+
+  <div class="right-panel">
+    <h2>Uploaded Image</h2>
+    <input type="file" accept="image/*" onchange="previewUploadedImage(event)" />
+    <img id="previewImage" src="images/person1.jpg" alt="Preview" />
+  </div>
+
+  <script>
+    let selected = {
+      shirt: '',
+      pant: '',
+      jacket: ''
+    };
+
+    let selectedElements = {
+      shirt: null,
+      pant: null,
+      jacket: null
+    };
+
+    function selectItem(type, name, element) {
+      selected[type] = name;
+
+      if (selectedElements[type]) {
+        selectedElements[type].classList.remove('selected');
+      }
+
+      element.classList.add('selected');
+      selectedElements[type] = element;
+    }
+
+    function previewUploadedImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const img = document.getElementById('previewImage');
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function submitSelection() {
+      alert(`Submitted:\nShirt: ${selected.shirt}\nPant: ${selected.pant}\nJacket: ${selected.jacket}`);
+    }
+  </script>
+
+</body>
+</html>
