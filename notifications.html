@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShopX - Notifications</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .alert-item {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 5px var(--card-shadow);
+        border-radius: 8px;
+      }
+      .alert-red {
+        background-color: #ff4c4c;
+        color: white;
+      }
+      .alert-orange {
+        background-color: #ff9900;
+        color: black;
+      }
+      .alert-yellow {
+        background-color: #ffff99;
+        color: black;
+      }
+
+      main h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .header-right nav {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .theme-btn {
+        background: none;
+        border: 1px solid white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+      }
+
+      .theme-btn:hover {
+        background-color: var(--accent-color);
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Shop<span>X</span></div>
+      <div class="header-right">
+        <nav>
+          <a href="index.html">Home</a>
+          <button onclick="toggleTheme()" class="theme-btn">Mode</button>
+        </nav>
+      </div>
+    </header>
+
+    <main style="padding: 2rem">
+      <h2>Beauty Product Expiry Alerts</h2>
+      <ul id="expiryList" style="margin-top: 1rem; list-style: none"></ul>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 ShopX. All rights reserved.</p>
+    </footer>
+
+    <script>
+      const today = new Date();
+
+      const expiringProducts = [
+        {
+          name: "Face Wash - Organic",
+          category: "beauty",
+          expiry: "2025-07-14",
+        },
+        { name: "Skin Serum", category: "beauty", expiry: "2025-07-16" },
+        { name: "Body Lotion", category: "beauty", expiry: "2025-07-20" },
+        {
+          name: "Wireless Headphones",
+          category: "electronics",
+          expiry: "2025-07-14",
+        },
+      ];
+
+      const list = document.getElementById("expiryList");
+
+      expiringProducts.forEach((product) => {
+        if (product.category !== "beauty") return;
+
+        const expiryDate = new Date(product.expiry);
+        const diff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+        let alertClass = "";
+        if (diff <= 1) {
+          alertClass = "alert-red";
+        } else if (diff <= 5) {
+          alertClass = "alert-orange";
+        } else if (diff <= 10) {
+          alertClass = "alert-yellow";
+        }
+
+        if (alertClass) {
+          const li = document.createElement("li");
+          li.className = `alert-item ${alertClass}`;
+          li.innerHTML = `<strong>${
+            product.name
+          }</strong><br/>Expires on: ${expiryDate.toDateString()} (${diff} day${
+            diff === 1 ? "" : "s"
+          } left)`;
+          list.appendChild(li);
+        }
+      });
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+      }
+    </script>
+  </body>
+</html>
