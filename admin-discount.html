@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShopX - Admin Panel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .category-filter {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: var(--card-bg);
+        flex-wrap: wrap;
+      }
+
+      .category-filter button {
+        padding: 0.5rem 1rem;
+        background-color: #eeeeee;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .category-filter button:hover {
+        background-color: #ccc;
+      }
+
+      input[type="number"] {
+        padding: 0.5rem;
+        width: 80%;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Shop<span>X</span></div>
+      <div class="header-right">
+        <nav>
+          <a href="index.html">Home</a>
+          <a href="#" onclick="logout()">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Category Filter -->
+    <section class="category-filter">
+      <button onclick="filterCategory('all')">All</button>
+      <button onclick="filterCategory('electronics')">Electronics</button>
+      <button onclick="filterCategory('clothing')">Clothing</button>
+      <button onclick="filterCategory('home')">Home</button>
+      <button onclick="filterCategory('beauty')">Beauty</button>
+    </section>
+
+    <main class="product-grid" id="discountGrid"></main>
+
+    <footer>
+      <p>&copy; 2025 ShopX. All rights reserved.</p>
+    </footer>
+
+    <script>
+      const adminEmail = "admin@shopx.com";
+      let userEmail = prompt("Enter admin email:");
+      if (userEmail !== adminEmail) {
+        alert("Unauthorized access!");
+        window.location.href = "index.html";
+      }
+
+      const products = [
+        {
+          name: "Smartphone XYZ",
+          category: "electronics",
+          price: 499.99,
+          img: "images/product1.jpg",
+        },
+        {
+          name: "Wireless Headphones",
+          category: "electronics",
+          price: 129.99,
+          img: "images/product2.jpg",
+        },
+        {
+          name: "LED TV 42”",
+          category: "home",
+          price: 349.99,
+          img: "images/product3.jpg",
+        },
+        {
+          name: "Men's Jacket",
+          category: "clothing",
+          price: 89.99,
+          img: "images/product4.jpg",
+        },
+        {
+          name: "Blender Pro",
+          category: "home",
+          price: 59.99,
+          img: "images/product5.jpg",
+        },
+        {
+          name: "Face Wash - Organic",
+          category: "beauty",
+          price: 12.99,
+          img: "images/product6.jpg",
+        },
+        {
+          name: "LED Desk Lamp",
+          category: "home",
+          price: 24.99,
+          img: "images/product7.jpg",
+        },
+        {
+          name: "Running Shoes",
+          category: "clothing",
+          price: 64.99,
+          img: "images/product8.jpg",
+        },
+      ];
+
+      let currentCategory = "all";
+
+      function filterCategory(category) {
+        currentCategory = category;
+        loadDiscountEditor();
+      }
+
+      function loadDiscountEditor() {
+        const grid = document.getElementById("discountGrid");
+        grid.innerHTML = "";
+
+        products.forEach((product, index) => {
+          const stored = localStorage.getItem(product.name);
+          const finalPrice = stored ? parseFloat(stored) : product.price;
+
+          if (
+            currentCategory === "all" ||
+            product.category === currentCategory
+          ) {
+            const div = document.createElement("div");
+            div.className = "product-card";
+            div.innerHTML = `
+            <img src="${product.img}" alt="${product.name}" />
+            <h3>${product.name}</h3>
+            <input type="number" id="price-${index}" value="${finalPrice}" step="0.01" />
+            <button onclick="updatePrice(${index})">Update Price</button>
+          `;
+            grid.appendChild(div);
+          }
+        });
+      }
+
+      function updatePrice(index) {
+        const newPrice = document.getElementById(`price-${index}`).value;
+        localStorage.setItem(products[index].name, parseFloat(newPrice));
+        alert(`Updated ${products[index].name} to $${newPrice}`);
+      }
+
+      function logout() {
+        alert("Logged out.");
+        window.location.href = "index.html";
+      }
+
+      loadDiscountEditor();
+    </script>
+  </body>
+</html>
