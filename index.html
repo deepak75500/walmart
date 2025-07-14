@@ -48,6 +48,8 @@
         <a href="#">Deals</a>
         <a href="#" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</a>
         <a href="#">Login</a>
+        <a href="#" onclick="signInAsGuest()">Sign In as Guest</a>
+        <a href="#" onclick="showProfile()">Profile</a>
         <a href="#" onclick="toggleUpload()">Upload Image</a>
         <button onclick="toggleTheme()" class="theme-btn">Mode</button>
       </nav>
@@ -69,10 +71,13 @@
     <div class="cart-header">
       <h2>Your Cart</h2>
       <button onclick="toggleCart()" class="close-cart">&times;</button>
+      
+
     </div>
     <ul id="cartItems" class="cart-items-list"></ul>
     <div class="cart-footer">
       <strong>Total: $<span id="cartTotal">0.00</span></strong>
+      <button onclick="proceedToPayment()" class="proceed-btn">Proceed to Payment</button>
     </div>
   </aside>
 
@@ -250,6 +255,30 @@
         card.style.display = (name.includes(input) || category.includes(input)) ? 'block' : 'none';
       });
     }
+
+    function signInAsGuest() {
+      localStorage.setItem("shopxUser", "Guest");
+      alert("Signed in as Guest!");
+    }
+
+    function proceedToPayment() {
+  let items = cart.reduce((sum, item) => sum + item.qty, 0);
+  let trust = parseInt(localStorage.getItem('trustScore')) || 0;
+  trust += 10 * items;
+  localStorage.setItem('trustScore', trust);
+  alert(`Proceeding to payment...\nTrust Score updated by ${10 * items} points.`);
+  cart = [];
+  updateCartUI();
+}
+
+function showProfile() {
+  let user = localStorage.getItem("shopxUser") || "Guest";
+  let score = localStorage.getItem("trustScore") || 0;
+  alert(`User: ${user}\nTrust Score: ${score}`);
+}
+
+
+
   </script>
 </body>
 </html>
